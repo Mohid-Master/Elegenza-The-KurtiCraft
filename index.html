@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elegenza: The KurtiCraft</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ======================= HEADER ======================= -->
+    <header>
+        <nav class="navbar">
+            <a href="#" class="nav-logo">Elegenza<span>The KurtiCraft</span></a>
+            
+            <!-- This is the main desktop menu -->
+                        <ul class="nav-menu">
+                <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="#products" class="nav-link">Products</a></li>
+                <li class="nav-item"><a href="#about" class="nav-link">About Us</a></li>
+            </ul>
+    <ul class="nav-menu" id="mobile-nav-menu">
+        <button id="close-mobile-menu-btn">×</button>
+        <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
+        <li class="nav-item"><a href="#products" class="nav-link">Products</a></li>
+        <li class="nav-item"><a href="#about" class="nav-link">About Us</a></li>
+    </ul>
+
+            <div class="nav-icons">
+                <div id="user-auth-section" class="icon-wrapper">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div id="cart-icon" class="icon-wrapper">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span id="cart-count">0</span>
+                </div>
+                <!-- NEW: Hamburger Menu Icon for Mobile -->
+                <div id="hamburger-icon" class="icon-wrapper">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <main>
+        <!-- ======================= HERO SECTION (WITH VIDEO) ======================= -->
+        <section class="hero">
+            <video autoplay muted loop playsinline class="hero-video">
+                <source src="videos/hero-video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1 class="hero-title">Crafted with Passion,</h1>
+                <h2 class="hero-subtitle">Worn with Elegance.</h2>
+                <p class="hero-description">Discover our exclusive collection of handcrafted kurtis that blend traditional art with contemporary design.</p>
+                <a href="#products" class="btn btn-primary">Shop The Collection</a>
+            </div>
+        </section>
+
+        <!-- ======================= PRODUCTS SECTION ======================= -->
+        <section id="products" class="product-section">
+            <h2 class="section-title">Our Bestsellers</h2>
+            <div class="product-grid" id="product-grid">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </section>
+   <!-- ======================= NEW: ABOUT US SECTION ======================= -->
+        <section id="about" class="about-section">
+            <h2 class="section-title">The Heart of KurtiCraft</h2>
+            <div class="about-content">
+                <div class="about-image">
+                    <img src="https://i.pinimg.com/564x/4e/a0/0b/4ea00b3e5b15b4f653199e4a39220023.jpg" alt="Crafting Kurtis">
+                </div>
+                <div class="about-text">
+                    <h3>Weaving Stories, Not Just Fabric</h3>
+                    <p>Elegenza was born from a passion for traditional Pakistan artistry and a love for contemporary fashion. We believe every kurti is a canvas, and our artisans are the storytellers. Each piece is handcrafted with meticulous attention to detail, using ethically sourced materials and age-old techniques passed down through generations.</p>
+                    <p>Our mission is to bring you unique, high-quality kurtis that make you feel beautiful, confident, and connected to a rich cultural heritage. Thank you for being a part of our journey.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ======================= FOOTER ======================= -->
+    <footer>
+        <p>© 2025 Elegenza: The KurtiCraft. All Rights Reserved.</p>
+         <span style="font-size:40%;">Designed by @I-am-mohid</span>
+    </footer>
+
+    <!-- ======================= MODALS & OVERLAYS ======================= -->
+    <!-- All modals and sidebars from the previous version remain here, their content will just be populated more dynamically. -->
+  <!-- NEW: Mobile Navigation Sidebar (repurposing the nav-menu) -->
+
+    <!-- 1. Product Details Modal -->
+    <div id="product-modal" class="modal-overlay">
+        <div class="modal-content wide">
+            <button class="modal-close-btn">×</button>
+            <div class="modal-body" id="product-modal-body">
+                <!-- Fully dynamic content now -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- 2. Shopping Cart Sidebar (no change to HTML) -->
+    <div id="cart-sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3>Your Shopping Cart</h3>
+            <button id="close-cart-btn">×</button>
+        </div>
+        <div id="cart-items" class="sidebar-body"></div>
+        <div class="sidebar-footer">
+            <div class="subtotal">
+                <strong>Subtotal:</strong>
+                <span id="cart-subtotal">₹0.00</span>
+            </div>
+            <button id="checkout-btn" class="btn btn-primary btn-full-width">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- 3. Sign-Up Modal -->
+    <div id="signup-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn">×</button>
+            <h3 id="signup-modal-title">Create an Account</h3>
+            <form id="signup-form">
+                <input type="text" id="signup-name" placeholder="Full Name" required>
+                <input type="tel" id="signup-phone" placeholder="Phone Number (e.g. 91...)" required>
+                <button type="button" id="get-location-btn" class="btn btn-secondary">Use My Current Location</button>
+                <p id="location-status"></p>
+                <button type="submit" id="signup-submit-btn" class="btn btn-primary">Sign Up</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 4. Checkout Page Overlay (no change to HTML) -->
+    <div id="checkout-page" class="modal-overlay">
+        <div class="modal-content wide">
+            <button class="modal-close-btn">×</button>
+            <h3>Checkout</h3>
+            <div class="checkout-layout">
+                <div class="order-summary">
+                    <h4>Order Summary</h4>
+                    <div id="checkout-summary-items"></div>
+                    <hr>
+                    <div class="total">
+                        <strong>Total:</strong>
+                        <strong id="checkout-total">₹0.00</strong>
+                    </div>
+                </div>
+                <div class="customer-details">
+                    <h4>Shipping Information</h4>
+                    <form id="checkout-form">
+                        <input type="text" id="checkout-name" placeholder="Full Name" required>
+                        <input type="tel" id="checkout-phone" placeholder="Phone Number" required>
+                        <textarea id="checkout-address" placeholder="Full Address (House No, Street, City, Pincode)" required rows="4"></textarea>
+                        <button type="submit" class="btn btn-primary btn-full-width">Complete Order & Send on WhatsApp</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- GSAP & Our JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/ScrollTrigger.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+
+</body>
+</html>
