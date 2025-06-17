@@ -316,8 +316,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleCompleteOrder() {
         const name = document.getElementById('checkout-name').value;
         const phone = document.getElementById('checkout-phone').value;
-        const address = document.getElementById('checkout-address').value;
-        const clientWhatsAppNumber = '910000000000'; // <-- IMPORTANT: REPLACE
+        const address = document.getElementById('checkout-address').value + ;
+        const clientWhatsAppNumber = '+923051120225'; // <-- IMPORTANT: REPLACE
         let message = `*New Order from Elegenza Website!* 🎉\n\n*Customer Details:*\n*Name:* ${name}\n*Phone:* ${phone}\n*Address:* ${address}\n\n*Order Items:*\n`;
         let total = 0;
         cart.forEach(item => {
