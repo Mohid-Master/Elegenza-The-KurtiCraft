@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elegenza Admin Panel</title>
+        <link rel="icon" type="image/png" href="https://elegenza-the-kurticraft.netlify.app/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="https://elegenza-the-kurticraft.netlify.app/favicon.svg" />
+<link rel="shortcut icon" href="https://elegenza-the-kurticraft.netlify.app/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/https://elegenza-the-kurticraft.netlify.app/apple-touch-icon.png" />
+<link rel="manifest" href="https://elegenza-the-kurticraft.netlify.app/site.webmanifest" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8a2be2; --secondary-color: #f4e8ff;
+            --accent-color: #ff69b4; --text-color: #333;
+            --light-text-color: #fff; --bg-color: #f8f9fa;
+            --danger-color: #dc3545; --success-color: #28a745;
+            --font-primary: 'Poppins', sans-serif; --font-secondary: 'Playfair Display', serif;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-primary); background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; }
+
+        .btn { display: inline-block; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; border: none; cursor: pointer; transition: all 0.3s ease; }
+        .btn-primary { background: linear-gradient(45deg, var(--primary-color), var(--accent-color)); color: var(--light-text-color); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(138, 43, 226, 0.3); }
+        .btn-secondary { background-color: #e9ecef; color: var(--text-color); border: 1px solid #ced4da; }
+        .btn-secondary:hover { background-color: #dae0e5; }
+        .btn-danger { background-color: var(--danger-color); color: white; }
+        .btn-danger:hover { background-color: #c82333; }
+        
+        input[type="text"], input[type="number"], input[type="password"], textarea { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 5px; font-family: var(--font-primary); font-size: 1rem; }
+        textarea { resize: vertical; }
+
+        .admin-container { max-width: 1100px; margin: 2rem auto; padding: 1rem; }
+        .admin-section { background: white; padding: 2rem; border-radius: 10px; box-shadow: var(--shadow); }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
+        .admin-header h1 { font-family: var(--font-secondary); color: var(--primary-color); }
+        .admin-header .header-actions { display: flex; gap: 1rem; }
+        
+        #login-form { display: flex; flex-direction: column; gap: 1rem; max-width: 350px; margin: 2rem auto; }
+        
+        .product-list-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #f0f0f0; transition: background-color 0.2s; }
+        .product-list-item:last-child { border-bottom: none; }
+        .product-list-item:hover { background: var(--secondary-color); }
+        .product-list-item .product-name { font-weight: 600; }
+        .product-list-item .actions { display: flex; gap: 0.5rem; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: center; padding: 1rem; }
+        .modal-content { background: white; border-radius: 10px; padding: 2rem; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
+        .modal-close-btn { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #aaa; }
+        
+        .admin-form { display: flex; flex-direction: column; gap: 1.5rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.25rem; }
+        .form-group label { font-weight: 600; margin-bottom: 0.25rem; }
+        .form-section { border: 1px dashed #ccc; padding: 1rem; border-radius: 5px; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 1rem; }
+        
+        .preview-list { display: flex; flex-wrap: wrap; gap: 1rem; }
+        .image-preview { position: relative; width: 100px; height: 100px; }
+        .image-preview img { width: 100%; height: 100%; object-fit: cover; border-radius: 5px; }
+        .delete-btn-icon { position: absolute; top: -7px; right: -7px; background: var(--danger-color); color: white; border-radius: 50%; border: none; width: 22px; height: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; line-height: 1; z-index: 2; }
+        .video-input-group { display: flex; gap: 1rem; }
+        .variant-option-tag { background: var(--secondary-color); padding: 5px 10px; border-radius: 20px; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; }
+        /* NEW: Style for the small 'x' button inside the tag */
+        .variant-option-tag .delete-option-btn { background: none; border: none; cursor: pointer; color: var(--danger-color); font-weight: bold; margin-left: 5px; padding: 0 5px;}
+        .review-group { display: grid; grid-template-columns: 1fr 100px; gap: 1rem; border-top: 1px solid #eee; padding-top: 1rem; }
+        .review-group textarea { grid-column: 1 / -1; }
+        
+        @media (max-width: 768px) {
+            .admin-header { flex-direction: column; align-items: flex-start; }
+            .modal-content { padding: 1.5rem; }
+            .video-input-group { flex-direction: column; }
+            .review-group { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Login Section -->
+        <section id="login-section" class="admin-section">
+            <h1>Admin Login</h1>
+            <form id="login-form">
+                <input type="password" id="password" placeholder="Enter Password" required>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </section>
+
+        <!-- Admin Dashboard (Initially Hidden) -->
+        <section id="admin-dashboard" class="admin-section" style="display: none;">
+            <header class="admin-header">
+                <h1>Elegenza Admin</h1>
+                <div class="header-actions">
+                    <button id="add-new-product-btn" class="btn btn-primary">Add New Kurti</button>
+                    <button id="save-data-btn" class="btn btn-secondary">Save & Download data.js</button>
+                </div>
+            </header>
+            <div id="product-list"></div>
+        </section>
+    </div>
+
+    <!-- Product Form Overlay -->
+    <div id="edit-form-container" class="modal-overlay">
+        <div class="modal-content">
+            <button id="close-form-btn" class="modal-close-btn">×</button>
+            <h2 id="form-title">Add/Edit Product</h2>
+            <form id="product-form" class="admin-form">
+                <input type="hidden" id="product-id">
+                <div class="form-group"><label for="product-name">Product Name:</label><input type="text" id="product-name" required></div>
+                <div class="form-group"><label for="product-desc">Description:</label><textarea id="product-desc" rows="4" required></textarea></div>
+                <div class="form-group"><label for="product-price">Original Price (Rs):</label><input type="number" id="product-price" required></div>
+                <div class="form-group"><label for="product-sale-price">Sale Price (Rs) (optional):</label><input type="number" id="product-sale-price"></div>
+                
+                <div class="form-section">
+                    <label>Images (Upload via ImageKit):</label>
+                    <input type="file" id="image-upload" accept="image/*"><p id="upload-status"></p>
+                    <div id="image-previews"><div class="preview-list"></div></div>
+                </div>
+
+                <div class="form-section">
+                    <label>YouTube Embed URLs:</label>
+                    <div class="video-input-group"><input type="text" id="video-url-input" placeholder="e.g., https://youtube.com/embed/xxxxxx"><button type="button" id="add-video-btn" class="btn btn-secondary">Add</button></div>
+                    <div id="video-previews"><div class="preview-list"></div></div>
+                </div>
+
+                <div class="form-section">
+                    <label>Variants (e.g., Size, Color):</label>
+                    <div id="variants-container"></div>
+                    <button type="button" id="add-variant-btn" class="btn btn-secondary">Add Variant Type</button>
+                </div>
+
+                <div class="form-section">
+                    <label>Customer Reviews:</label>
+                    <div id="reviews-container"></div>
+                    <button type="button" id="add-review-btn" class="btn btn-secondary">Add Review</button>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Save Product</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="js/data.js"></script> 
+    <script src="js/admin.js"></script> 
+</body>
+</html>
