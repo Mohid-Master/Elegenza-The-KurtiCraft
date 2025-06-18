@@ -84,11 +84,15 @@ document.addEventListener('DOMContentLoaded', () => {
             cart.forEach(item => {
                 const cartItem = document.createElement('div');
                 cartItem.className = 'cart-item';
-                cartItem.innerHTML = `
-                    <img src="${item.image}" alt="${item.name}" class="cart-item-img">
-                    <div class="cart-item-info">
-                        <h4>${item.name}</h4>
-                        <p>Size: ${item.size}, Color: ${item.color}</p>
+                    const variantText = Object.entries(item.variants)
+        .map(([key, value]) => `<span>${key}: ${value}</span>`)
+        .join(', ');
+
+    cartItem.innerHTML = `
+        <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+        <div class="cart-item-info">
+            <h4>${item.name}</h4>
+            <p class="cart-item-variants">${variantText}</p>
                         <p>Price: Rs ${item.price.toFixed(2)}</p>
                         <div class="cart-item-quantity">
                             <button class="quantity-btn" data-action="decrease" data-cart-id="${item.cartId}">-</button>
@@ -124,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Product & User Auth Handlers ---
     productGrid.addEventListener('click', e => {
         if (e.target.classList.contains('view-details-btn')) {
-            openProductModal(parseInt(e.target.dataset.id));
+            openProductModal(e.target.dataset.id);
         }
     });
 
@@ -236,67 +240,155 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ======================= MODAL & PAGE FUNCTIONS =======================
-    function openProductModal(productId) {
-        const product = products.find(p => p.id === productId);
-        document.getElementById('product-modal-body').innerHTML = `
-            <div class="modal-gallery">
-                <div class="gallery-main-view"><img src="${product.images[0]}" alt="${product.name}"></div>
-                <div class="gallery-thumbnails">
-                    ${product.images.map((img, index) => `<div class="thumbnail-item ${index === 0 ? 'active' : ''}" data-src="${img}" data-type="image"><img src="${img}" alt="Thumbnail ${index + 1}"></div>`).join('')}
-                    ${product.video ? `<div class="thumbnail-item" data-src="${product.video}" data-type="video"><img src="${product.images[0]}" alt="Video thumbnail"><div class="video-play-icon"><i class="fas fa-play"></i></div></div>` : ''}
-                </div>
-            </div>
-            <div class="modal-product-details">
-                <h3>${product.name}</h3>
-                <p class="price">Rs ${product.price.toFixed(2)}</p>
-                <p class="description">${product.description}</p>
-                <div class="option-group"><h4>Size:</h4><div class="option-boxes" id="size-options">${product.sizes.map(s => `<div class="option-box" data-value="${s}">${s}</div>`).join('')}</div></div>
-                <div class="option-group"><h4>Color:</h4><div class="option-boxes" id="color-options">${product.colors.map(c => `<div class="option-box" data-value="${c}">${c}</div>`).join('')}</div></div>
-                <div class="option-group quantity-selector"><h4>Quantity:</h4><input type="number" id="quantity" value="1" min="1" max="10" required></div>
-                <button id="add-to-cart-btn" class="btn btn-primary btn-full-width" data-id="${product.id}">Add to Cart</button>
-            </div>
-        `;
-        
-        const modalBody = document.getElementById('product-modal-body');
-        const mainView = modalBody.querySelector('.gallery-main-view');
-        
-        modalBody.querySelectorAll('.thumbnail-item').forEach(thumb => {
-            thumb.addEventListener('click', () => {
-                modalBody.querySelector('.thumbnail-item.active').classList.remove('active');
-                thumb.classList.add('active');
-                if (thumb.dataset.type === 'video') mainView.innerHTML = `<video src="${thumb.dataset.src}" autoplay controls></video>`;
-                else mainView.innerHTML = `<img src="${thumb.dataset.src}" alt="${product.name}">`;
-            });
-        });
+    // In js/script.js, replace your entire openProductModal function with this one.
 
-        modalBody.addEventListener('click', e => {
-            if (e.target.classList.contains('option-box')) {
-                const parent = e.target.parentElement;
-                if (parent.querySelector('.selected')) parent.querySelector('.selected').classList.remove('selected');
-                e.target.classList.add('selected');
-            }
-        });
-
-        document.getElementById('add-to-cart-btn').addEventListener('click', () => {
-            const selectedSizeEl = modalBody.querySelector('#size-options .selected');
-            const selectedColorEl = modalBody.querySelector('#color-options .selected');
-            if (!selectedSizeEl || !selectedColorEl) {
-                showToast('Please select a size and color.', 3000, true); return;
-            }
-            const newItem = {
-                cartId: Date.now(), id: product.id, name: product.name, price: product.price, image: product.images[0],
-                quantity: parseInt(modalBody.querySelector('#quantity').value),
-                size: selectedSizeEl.dataset.value, color: selectedColorEl.dataset.value,
-            };
-            cart.push(newItem);
-            updateCartUI();
-            animateCartIcon();
-            closeModal(productModal);
-            showToast(`${newItem.name} added to cart!`);
-        });
-
-        openModal(productModal);
+const openProductModal = (productId) => {
+    // Find product by its string ID. This is now safe because data.js is clean.
+    const product = products.find(p => p.id == productId);
+    if (!product) {
+        console.error(`Product with ID "${productId}" not found.`);
+        return;
     }
+
+    // --- 1. SETUP: Prepare gallery items and helper function ---
+    const getYouTubeThumbnail = (videoUrl) => {
+        try {
+            const videoId = new URL(videoUrl).pathname.split('/').pop();
+            // Use a high-quality thumbnail image from YouTube
+            return `https://i3.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+        } catch (e) {
+            // A fallback icon if the URL is ever broken
+            return 'https://i.imgur.com/tX2hB5g.png'; 
+        }
+    };
+
+    // Combine images and videos into a single array for the gallery
+    const galleryItems = [
+        ...(product.images || []).map(url => ({ type: 'image', url })),
+        ...(product.videoUrls || []).map(url => ({ type: 'video', url }))
+    ];
+
+    // --- 2. BUILD HTML: Create the complete HTML string for the modal body ---
+    const variantHTML = (product.variants || []).map(v => `
+        <div class="option-group">
+            <h4>${v.name}:</h4>
+            <div class="option-boxes" data-variant-name="${v.name}">
+                ${v.options.map(o => `<div class="option-box" data-value="${o}">${o}</div>`).join('')}
+            </div>
+        </div>`).join('');
+
+    const reviewHTML = (product.reviews && product.reviews.length > 0) ? `
+        <div class="reviews-section">
+            <h4>What Our Customers Say</h4>
+            ${product.reviews.map(r => `
+                <div class="review-item">
+                    <div class="review-rating">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+                    <p class="review-comment">"${r.comment}"</p>
+                    <p class="review-author">- ${r.author}</p>
+                </div>`).join('')}
+        </div>` : '';
+
+    const modalBody = document.getElementById('product-modal-body');
+    // This single innerHTML assignment prevents the conflicts you saw before.
+    modalBody.innerHTML = `
+        <div class="modal-gallery">
+            <div class="gallery-main-view">
+                <!-- Main view will be populated by JS -->
+            </div>
+            <div class="gallery-thumbnails">
+                ${galleryItems.map((item, i) => `
+                    <div class="thumbnail-item ${i === 0 ? 'active' : ''}" data-type="${item.type}" data-url="${item.url}">
+                        <img src="${item.type === 'image' ? item.url : getYouTubeThumbnail(item.url)}" alt="Thumbnail">
+                        ${item.type === 'video' ? '<div class="video-play-icon"><i class="fas fa-play"></i></div>' : ''}
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+        <div class="modal-product-details">
+            <h3>${product.name}</h3>
+            <div class="price-container">${product.salePrice ? `<span class="price sale">Rs ${product.salePrice.toFixed(2)}</span><br><span class="price original">Rs ${product.price.toFixed(2)}</span>` : `<span class="price">Rs ${product.price.toFixed(2)}</span>`}</div>
+            <p class="description">${product.description}</p>
+            ${variantHTML}
+            <div class="option-group quantity-selector"><h4>Quantity:</h4><input type="number" id="quantity" value="1" min="1" max="10" required></div>
+            <button id="add-to-cart-btn" class="btn btn-primary btn-full-width">Add to Cart</button>
+            ${reviewHTML}
+        </div>
+    `;
+    
+    // --- 3. BIND EVENTS: Make the new gallery interactive ---
+    const mainView = modalBody.querySelector('.gallery-main-view');
+    const thumbnails = modalBody.querySelectorAll('.thumbnail-item');
+
+    const loadMainView = (element) => {
+        const type = element.dataset.type;
+        const url = element.dataset.url;
+
+        gsap.to(mainView, { opacity: 0, duration: 0.2, onComplete: () => {
+            if (type === 'image') {
+                mainView.innerHTML = `<img src="${url}" alt="Main product view">`;
+            } else if (type === 'video') {
+                mainView.innerHTML = `<iframe src="${url}?autoplay=1&mute=1&rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            }
+            gsap.to(mainView, { opacity: 1, duration: 0.3, delay: 0.1 });
+        }});
+    };
+
+    thumbnails.forEach(thumb => {
+        thumb.addEventListener('click', () => {
+            mainView.innerHTML = ''; // Stop any playing video
+            modalBody.querySelector('.thumbnail-item.active')?.classList.remove('active');
+            thumb.classList.add('active');
+            loadMainView(thumb);
+        });
+    });
+
+    // Load the first item when the modal opens
+    if (thumbnails.length > 0) {
+        loadMainView(thumbnails[0]);
+    }
+
+    // --- 4. BIND FORM LOGIC ---
+    modalBody.addEventListener('click', e => {
+        if (e.target.classList.contains('option-box')) {
+            const group = e.target.closest('.option-boxes');
+            group.querySelector('.selected')?.classList.remove('selected');
+            e.target.classList.add('selected');
+        }
+    });
+
+    modalBody.querySelector('#add-to-cart-btn').addEventListener('click', () => {
+        let allVariantsSelected = true;
+        const selectedVariants = {};
+        modalBody.querySelectorAll('.option-boxes').forEach(group => {
+            const selected = group.querySelector('.selected');
+            if (selected) {
+                selectedVariants[group.dataset.variantName] = selected.dataset.value;
+            } else if ((product.variants || []).length > 0) {
+                allVariantsSelected = false;
+            }
+        });
+        if (!allVariantsSelected) {
+            showToast('Please select an option for each variant.', 3000, true);
+            return;
+        }
+        const newItem = {
+            cartId: Date.now(),
+            id: product.id,
+            name: product.name,
+            price: product.salePrice || product.price,
+            image: product.images[0],
+            quantity: parseInt(modalBody.querySelector('#quantity').value),
+            variants: selectedVariants
+        };
+        cart.push(newItem);
+        updateCartUI();
+        animateCartIcon();
+        closeModal(productModal);
+        showToast(`${newItem.name} added to cart!`);
+    });
+
+    openModal(productModal);
+};
     
     function openCheckoutPage() {
         const summaryItemsEl = document.getElementById('checkout-summary-items');
