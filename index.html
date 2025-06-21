@@ -77,12 +77,22 @@
         </section>
 
         <!-- ======================= PRODUCTS SECTION ======================= -->
-        <section id="products" class="product-section">
-            <h2 class="section-title">Our Bestsellers</h2>
-            <div class="product-grid" id="product-grid">
-                <!-- Product cards will be dynamically inserted here -->
-            </div>
-        </section>
+<!-- In index.html -->
+
+<section id="products" class="product-section">
+    <h2 class="section-title">Our Bestsellers</h2>
+
+    <!-- NEW SEARCH BAR HTML -->
+    <div class="search-container">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="search-bar" placeholder="Search for kurtis, colors, etc...">
+    </div>
+    <!-- END OF NEW HTML -->
+
+    <div class="product-grid" id="product-grid">
+        <!-- Products will be rendered here by JS -->
+    </div>
+</section>
    <!-- ======================= NEW: ABOUT US SECTION ======================= -->
         <section id="about" class="about-section">
             <h2 class="section-title">The Heart of KurtiCraft</h2>
@@ -126,14 +136,28 @@
             <button id="close-cart-btn">×</button>
         </div>
         <div id="cart-items" class="sidebar-body"></div>
-        <div class="sidebar-footer">
-            <div class="subtotal">
-                <strong>Subtotal:</strong>
-                <span id="cart-subtotal">Rs 0.00</span>
-            </div>
-            <button id="checkout-btn" class="btn btn-primary btn-full-width">Proceed to Checkout</button>
-        </div>
+<!-- In index.html, inside the #cart-sidebar -->
+
+<div class="sidebar-footer">
+    <!-- NEW COUPON FIELD HTML -->
+    <div class="coupon-group">
+        <input type="text" id="coupon-input" placeholder="Enter Coupon Code">
+        <button id="apply-coupon-btn" class="btn btn-secondary">Apply</button>
     </div>
+    <p id="coupon-status"></p>
+    <!-- END OF NEW HTML -->
+
+    <div class="subtotal"><strong>Subtotal:</strong><span id="cart-subtotal">Rs 0.00</span></div>
+    <div id="discount-row" class="subtotal discount" style="display: none;">
+        <strong>Discount:</strong><span id="discount-amount"></span>
+    </div>
+    <hr id="discount-hr" style="display: none;">
+    <div class="subtotal total"><strong>Total:</strong><span id="cart-total">Rs 0.00</span></div>
+    
+    <button id="checkout-btn" class="btn btn-primary btn-full-width">Proceed to Checkout</button>
+</div>
+    </div>
+    
 
     <!-- 3. Sign-Up Modal -->
     <div id="signup-modal" class="modal-overlay">
