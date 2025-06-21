@@ -103,7 +103,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1rem 5%;
-    background: #fff;
+    background: #fffffc7;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     position: sticky;
     top: 0;
@@ -791,7 +791,7 @@ body { font-family: var(--font-primary); color: var(--text-color); background-co
 .nav-item, .nav-icons .icon-wrapper { opacity: 0; transform: translateY(-20px); }
 
 /* ======================= HEADER & NAVBAR ======================= */
-.navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 5%; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; 
+.navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 5%; background: #ffffffc7; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; 
             backdrop-filter: blur(1px); 
          /* background: linear-gradient(45deg, white, #c568e1d4); */
         }
@@ -1030,4 +1030,68 @@ body { font-family: var(--font-primary); color: var(--text-color); background-co
     text-decoration: line-through;
     font-size: 80%;
     color: blueviolet;}
+
+/* In css/style.css */
+
+/* --- PRODUCT SEARCH BAR STYLES --- */
+.search-container {
+    position: relative;
+    max-width: 500px;
+    margin: 0 auto 4rem auto; /* Center it and add space below */
+}
+
+#search-bar {
+    width: 100%;
+    padding: 15px 20px 15px 50px; /* Add padding on the left for the icon */
+    border: 2px solid var(--border-light);
+    border-radius: 50px; /* Pill shape */
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+#search-bar:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px var(--secondary-color);
+}
+
+.search-container .search-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+    font-size: 1.1rem;
+}
+/* In css/style.css */
+
+/* --- COUPON FIELD STYLES --- */
+.coupon-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+#coupon-input {
+    flex-grow: 1;
+    border: 1px solid var(--border-light);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#apply-coupon-btn {
+    padding: 10px 15px; /* Make it smaller to fit */
+}
+
+#coupon-status {
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+#coupon-status.success { color: var(--success-color); }
+#coupon-status.error { color: var(--danger-color); }
+
+.sidebar-footer .subtotal.discount { color: var(--success-color); }
+.sidebar-footer .subtotal.total { font-size: 1.3rem; }
 
