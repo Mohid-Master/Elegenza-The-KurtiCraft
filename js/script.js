@@ -45,28 +45,63 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // ======================= RENDER & UI FUNCTIONS =======================
-    function renderProducts() {
-        if (!productGrid) return;
-        productGrid.innerHTML = '';
-        products.forEach(product => {
-            const productCard = document.createElement('div');
-            productCard.className = 'product-card';
-            productCard.innerHTML = `
+    // function renderProducts() {
+    //     if (!productGrid) return;
+    //     productGrid.innerHTML = '';
+    //     products.forEach(product => {
+    //         const productCard = document.createElement('div');
+    //         productCard.className = 'product-card';
+    //         productCard.innerHTML = `
+    //             <img src="${product.images[0]}" alt="${product.name}" class="product-image">
+    //             <div class="product-info">
+    //                 <h3 class="product-title">${product.name}</h3>
+    //                 <div class="price-container">${product.salePrice ? `<span class="product-price sale">Rs ${product.salePrice.toFixed(2)}</span><br><span class="price original">Rs ${product.price.toFixed(2)}</span>` : `<span class="product-price">Rs ${product.price.toFixed(2)}</span>`}</div>
+    //                 <button class="btn btn-secondary view-details-btn" data-id="${product.id}">View Details</button>
+    //             </div>
+    //         `;
+    //         productGrid.appendChild(productCard);
+    //     });
+
+    //     gsap.from(".product-card", {
+    //         scrollTrigger: { trigger: ".product-grid", start: "top 80%" },
+    //         opacity: 0, y: 50, duration: 0.8, stagger: 0.15, ease: 'power3.out'
+    //     });
+    // }
+    // 2. Replace your OLD renderProducts function with this NEW version
+const renderProducts = (searchQuery = '') => {
+    if (!productGrid) return;
+
+    const lowerCaseQuery = searchQuery.toLowerCase();
+
+    // Filter products based on the search query
+    const filteredProducts = products.filter(product => {
+        // Check if the query is in the name, description, or variants
+        const nameMatch = product.name.toLowerCase().includes(lowerCaseQuery);
+        const descriptionMatch = product.description.toLowerCase().includes(lowerCaseQuery);
+        // You can add more checks here (e.g., for colors, sizes)
+        return nameMatch || descriptionMatch;
+    });
+
+    if (filteredProducts.length === 0) {
+        productGrid.innerHTML = `<p class="empty-cart-message">No products found for "${searchQuery}"</p>`;
+    } else {
+        productGrid.innerHTML = filteredProducts.map(product => `
+            <div class="product-card">
                 <img src="${product.images[0]}" alt="${product.name}" class="product-image">
                 <div class="product-info">
                     <h3 class="product-title">${product.name}</h3>
-                    <p class="product-price">Rs ${product.price.toFixed(2)}</p>
+                    <div class="price-container">${product.salePrice ? `<span class="product-price sale">Rs ${product.salePrice.toFixed(2)}</span><br><span class="price original">Rs ${product.price.toFixed(2)}</span>` : `<span class="product-price">Rs ${product.price.toFixed(2)}</span>`}</div>
                     <button class="btn btn-secondary view-details-btn" data-id="${product.id}">View Details</button>
                 </div>
-            `;
-            productGrid.appendChild(productCard);
-        });
-
-        gsap.from(".product-card", {
-            scrollTrigger: { trigger: ".product-grid", start: "top 80%" },
-            opacity: 0, y: 50, duration: 0.8, stagger: 0.15, ease: 'power3.out'
-        });
+            </div>`).join('');
     }
+    
+    // Re-apply the GSAP animation to the newly rendered cards
+    gsap.from(".product-card", {
+        opacity: 0, y: 60, duration: 0.8, stagger: 0.1, ease: 'power3.out'
+    });
+};
+
 
     function updateUserUI() {
         if (user) {
@@ -87,6 +122,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     const variantText = Object.entries(item.variants)
         .map(([key, value]) => `<span>${key}: ${value}</span>`)
         .join(', ');
+        // --- NEW LOGIC FOR TOTALS ---
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            let discount = 0;
+            let c = cart;
+            const totalItems = c.reduce((sum, item) => sum + item.quantity, 0);
+            if (appliedCoupon && affiliateCodes[appliedCoupon]) {
+                discount = affiliateCodes[appliedCoupon];
+                discountRow.style.display = 'flex';
+                discountHr.style.display = 'block';
+                discountAmountEl.textContent = `- Rs ${discount.toFixed(2)  * totalItems}`;
+                couponStatus.textContent = `Coupon "${appliedCoupon}" applied!`;
+                couponStatus.className = 'success';
+            } else {
+                discountRow.style.display = 'none';
+                discountHr.style.display = 'none';
+                couponStatus.textContent = '';
+            }
+
+            
+            const total = subtotal - (discount * totalItems);
+        
+            cartSubtotalEl.textContent = `Rs ${subtotal.toFixed(2)}`;
+            cartTotalEl.textContent = `Rs ${total > 0 ? total.toFixed(2) : '0.00'}`;
 
     cartItem.innerHTML = `
         <img src="${item.image}" alt="${item.name}" class="cart-item-img">
@@ -409,8 +467,21 @@ const openProductModal = (productId) => {
         const name = document.getElementById('checkout-name').value;
         const phone = document.getElementById('checkout-phone').value;
         const address = document.getElementById('checkout-address').value;
+            // --- NEW LOGIC STARTS HERE ---
+    let locationInfo = address; // Default to the typed address
+    
+    // Check if the address contains GPS coordinates
+    if (address.toLowerCase().startsWith('gps:')) {
+        // Extract the coordinates (e.g., "34.0522,-118.2437")
+        const coords = address.split('gps:')[1].trim();
+        // Create a clickable Google Maps link
+        const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${coords}`;
+        // Replace the plain text with the clickable link for the WhatsApp message
+        locationInfo = `[Click to View on Google Maps](${googleMapsUrl})`; 
+    }
+    // --- NEW LOGIC ENDS HERE ---
         const clientWhatsAppNumber = '+923051120225'; // <-- IMPORTANT: REPLACE
-        let message = `*New Order from Elegenza Website!* 🎉\n\n*Customer Details:*\n*Name:* ${name}\n*Phone:* ${phone}\n*Address:* ${address}\n\n*Order Items:*\n`;
+        let message = `*New Order from Elegenza Website!* 🎉\n\n*Customer Details:*\n*Name:* ${name}\n*Phone:* ${phone}\n*Address:* ${locationInfo}\n\n\n*Order Items:*\n`;
         let total = 0;
         cart.forEach(item => {
             message += `------------------------\n*Product:* ${item.name}\n*Size:* ${item.size}, *Color:* ${item.color}\n*Quantity:* ${item.quantity}\n*Price:* RS ${(item.price * item.quantity).toFixed(2)}\n`;
@@ -454,7 +525,94 @@ const openProductModal = (productId) => {
     const toastStyle = document.createElement('style');
     toastStyle.innerHTML = `.toast-notification { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: var(--primary-color); color: white; padding: 15px 30px; border-radius: 50px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 9999; font-weight: 600; }`;
     document.head.appendChild(toastStyle);
+// In js/script.js
 
+// 1. Add this new constant with your other DOM elements at the top
+const searchBar = document.getElementById('search-bar');
+
+
+
+
+// 3. Add this new event listener somewhere in your script
+if(searchBar) {
+    searchBar.addEventListener('keyup', (e) => {
+        // Render the products again with the current search bar value
+        renderProducts(e.target.value);
+    });
+}
+// In js/script.js
+
+// 1. Add this at the top with your other STATE variables
+const affiliateCodes = {
+    "MOHID181": 100,
+    "SALE20": 50,
+    "EIDGIFT": 50
+};
+let appliedCoupon = null;
+
+
+// 2. Add these new constants with your other DOM elements
+const couponInput = document.getElementById('coupon-input');
+const applyCouponBtn = document.getElementById('apply-coupon-btn');
+const couponStatus = document.getElementById('coupon-status');
+const discountRow = document.getElementById('discount-row');
+const discountAmountEl = document.getElementById('discount-amount');
+const cartTotalEl = document.getElementById('cart-total');
+const discountHr = document.getElementById('discount-hr');
+
+
+// 3. Replace your OLD updateCartUI function with this NEW version
+// const updateCartUI = () => {
+//     if (!cartItemsEl) return;
+//     // The first part of the function that renders items is the same...
+//     cartItemsEl.innerHTML = cart.length === 0 ? '...' : cart.map(item => `...`).join('');
+    
+//     // --- NEW LOGIC FOR TOTALS ---
+//     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+//     let discount = 0;
+
+//     if (appliedCoupon && affiliateCodes[appliedCoupon]) {
+//         discount = affiliateCodes[appliedCoupon];
+//         discountRow.style.display = 'flex';
+//         discountHr.style.display = 'block';
+//         discountAmountEl.textContent = `- Rs ${discount.toFixed(2)}`;
+//         couponStatus.textContent = `Coupon "${appliedCoupon}" applied!`;
+//         couponStatus.className = 'success';
+//     } else {
+//         discountRow.style.display = 'none';
+//         discountHr.style.display = 'none';
+//         couponStatus.textContent = '';
+//     }
+
+//     const total = subtotal - discount;
+
+//     cartSubtotalEl.textContent = `Rs ${subtotal.toFixed(2)}`;
+//     cartTotalEl.textContent = `Rs ${total > 0 ? total.toFixed(2) : '0.00'}`;
+
+//     // The rest of the function (updating cart count, local storage) is the same...
+// };
+
+
+// 4. Add this new event listener for the Apply button
+if(applyCouponBtn) {
+    applyCouponBtn.addEventListener('click', () => {
+        const code = couponInput.value.trim().toUpperCase();
+        if (affiliateCodes[code]) {
+            appliedCoupon = code;
+            couponStatus.textContent = 'Coupon applied successfully!';
+            couponStatus.className = 'success';
+        } else {
+            appliedCoupon = null;
+            couponStatus.textContent = 'Invalid coupon code.';
+            couponStatus.className = 'error';
+        }
+        updateCartUI(); // Re-calculate totals
+    });
+}
+
+// 4. IMPORTANT: In your INITIALIZATION section at the very bottom of the file,
+// make sure the first call to renderProducts has no arguments.
+// renderProducts(); // This should be the line at the very bottom
     // ======================= INITIALIZATION =======================
     renderProducts();
     updateCartUI();
