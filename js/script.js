@@ -451,12 +451,13 @@ const openProductModal = (productId) => {
     function openCheckoutPage() {
         const summaryItemsEl = document.getElementById('checkout-summary-items');
         const totalEl = document.getElementById('checkout-total');
-        summaryItemsEl.innerHTML = cart.map(item => `<div class="cart-item"><img src="${item.image}" class="cart-item-img"><div class="cart-item-info"><h4>${item.name} (x${item.quantity})</h4><p>Size: ${item.size}, Color: ${item.color}</p></div></div>`).join('');
+        console.log(cart)
+        summaryItemsEl.innerHTML = cart.map(item =>  `<div class="cart-item"><img src="${item.image}" class="cart-item-img"><div class="cart-item-info"><h4>${item.name} (x${item.quantity})</h4>${ Object.entries(item.variants).map(([key, value]) => `<p>${key}: ${value}</p>`).join(', ')}</div></div>`).join('');
         totalEl.textContent = `Rs ${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}`;
         if (user) {
             document.getElementById('checkout-name').value = user.name;
             document.getElementById('checkout-phone').value = user.phone;
-            document.getElementById('checkout-address').value = user.location && user.location !== "Not Provided" ? `GPS: ${user.location}\n` : '';
+            document.getElementById('checkout-address').value = user.location && user.location !== "Not Provided" ? `${user.location}` : '';
         } else {
             document.getElementById('checkout-form').reset();
         }
@@ -471,20 +472,24 @@ const openProductModal = (productId) => {
     let locationInfo = address; // Default to the typed address
     
     // Check if the address contains GPS coordinates
-    if (address.toLowerCase().startsWith('gps:')) {
+    // if (address.toLowerCase().startsWith('gps:')) {
         // Extract the coordinates (e.g., "34.0522,-118.2437")
-        const coords = address.split('gps:')[1].trim();
+        // const coords = address.split('gps:')[1].trim();
         // Create a clickable Google Maps link
-        const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${coords}`;
+        const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${address}`;
         // Replace the plain text with the clickable link for the WhatsApp message
         locationInfo = `[Click to View on Google Maps](${googleMapsUrl})`; 
-    }
+    // }
     // --- NEW LOGIC ENDS HERE ---
         const clientWhatsAppNumber = '+923051120225'; // <-- IMPORTANT: REPLACE
         let message = `*New Order from Elegenza Website!* 🎉\n\n*Customer Details:*\n*Name:* ${name}\n*Phone:* ${phone}\n*Address:* ${locationInfo}\n\n\n*Order Items:*\n`;
         let total = 0;
+
         cart.forEach(item => {
-            message += `------------------------\n*Product:* ${item.name}\n*Size:* ${item.size}, *Color:* ${item.color}\n*Quantity:* ${item.quantity}\n*Price:* RS ${(item.price * item.quantity).toFixed(2)}\n`;
+         const variantText = Object.entries(item.variants)
+        .map(([key, value]) => `\n *${key}*: ${value} \n`)
+        .join(', ');
+            message += `------------------------\n*Product:* ${item.name}\n*Size:* ${item.size}, ${variantText} \n*Price:* RS ${(item.price * item.quantity).toFixed(2)}\n`;
             total += item.price * item.quantity;
         });
         message += `------------------------\n*GRAND TOTAL: Rs ${total.toFixed(2)}*\n\nPlease confirm this order.`;
