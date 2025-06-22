@@ -1,7 +1,7 @@
 // js/script.js
 
 document.addEventListener('DOMContentLoaded', () => {
-let CN = mohid181;
+let CN = false;
     // NOTE: The 'products' variable is now available globally because 'data.js' is loaded first.
     
     // ======================= STATE MANAGEMENT =======================
