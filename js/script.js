@@ -1,7 +1,7 @@
 // js/script.js
 
 document.addEventListener('DOMContentLoaded', () => {
-
+let CN = mohid181;
     // NOTE: The 'products' variable is now available globally because 'data.js' is loaded first.
     
     // ======================= STATE MANAGEMENT =======================
@@ -134,6 +134,7 @@ const renderProducts = (searchQuery = '') => {
                 discountAmountEl.textContent = `- Rs ${discount.toFixed(2)  * totalItems}`;
                 couponStatus.textContent = `Coupon "${appliedCoupon}" applied!`;
                 couponStatus.className = 'success';
+                CN = appliedCoupon;
             } else {
                 discountRow.style.display = 'none';
                 discountHr.style.display = 'none';
@@ -482,7 +483,7 @@ const openProductModal = (productId) => {
     // }
     // --- NEW LOGIC ENDS HERE ---
         const clientWhatsAppNumber = '+923051120225'; // <-- IMPORTANT: REPLACE
-        let message = `*New Order from Elegenza Website!* 🎉  \n*Customer Details:*\n*Name:* ${name}\n*Phone:* ${phone}\n *Address:* ${locationInfo}\n\n\n*Order Items:*\n`;
+        let message = `*New Order from Elegenza Website!* 🎉  \n*Customer Details:*\n*Name:* ${name}\n*Phone:* ${phone}\n *Address:* ${locationInfo}\n\n\n*Order Items:*\n CN?`AffiliateCoupon:${CN}`:""`;
         let total = 0;
 
         cart.forEach(item => {
@@ -550,8 +551,8 @@ if(searchBar) {
 // 1. Add this at the top with your other STATE variables
 const affiliateCodes = {
     "MOHID181": 100,
-    "SALE20": 50,
-    "EIDGIFT": 50
+    "Usman20": 70,
+    "hanzala48": 40
 };
 let appliedCoupon = null;
 
