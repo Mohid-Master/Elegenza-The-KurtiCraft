@@ -184,39 +184,48 @@ body {
 
 /* ======================= HERO SECTION ======================= */
 .hero {
+    position: relative;
     height: 90vh;
-    /* background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('../images/hero-bg.jpg') no-repeat center center/cover; */
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     text-align: center;
     color: var(--light-text-color);
-    padding: 0 5%;
+    padding: 0;
+    overflow: hidden;
 }
 
 .hero-content {
     /* For GSAP animations */
     opacity: 0;
     transform: translateY(30px);
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    padding-top: 5rem;
+    background-color: #0000008c;
+    opacity: 0;
+    transform: translateY(30px);
+    clip-path: polygon(100% 100%, 0% 100% , 0.00% 25.86%, 1.67% 25.95%, 3.33% 26.00%, 5.00% 25.99%, 6.67% 25.93%, 8.33% 25.83%, 10.00% 25.67%, 11.67% 25.47%, 13.33% 25.22%, 15.00% 24.92%, 16.67% 24.58%, 18.33% 24.20%, 20.00% 23.77%, 21.67% 23.31%, 23.33% 22.81%, 25.00% 22.28%, 26.67% 21.72%, 28.33% 21.13%, 30.00% 20.52%, 31.67% 19.89%, 33.33% 19.24%, 35.00% 18.58%, 36.67% 17.90%, 38.33% 17.22%, 40.00% 16.54%, 41.67% 15.85%, 43.33% 15.17%, 45.00% 14.50%, 46.67% 13.84%, 48.33% 13.20%, 50.00% 12.58%, 51.67% 11.97%, 53.33% 11.39%, 55.00% 10.84%, 56.67% 10.33%, 58.33% 9.84%, 60.00% 9.39%, 61.67% 8.98%, 63.33% 8.62%, 65.00% 8.29%, 66.67% 8.01%, 68.33% 7.78%, 70.00% 7.60%, 71.67% 7.46%, 73.33% 7.37%, 75.00% 7.33%, 76.67% 7.35%, 78.33% 7.41%, 80.00% 7.52%, 81.67% 7.69%, 83.33% 7.90%, 85.00% 8.15%, 86.67% 8.46%, 88.33% 8.80%, 90.00% 9.19%, 91.67% 9.62%, 93.33% 10.09%, 95.00% 10.59%, 96.67% 11.13%, 98.33% 11.69%, 100.00% 12.28%);
 }
 
 .hero-title {
     font-family: var(--font-secondary);
-    font-size: 4rem;
+    font-size: 3rem;
     /* backdrop-filter: */
 }
 
 .hero-subtitle {
     font-family: var(--font-secondary);
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     color: var(--secondary-color);
     margin-bottom: 1rem;
 }
 
 .hero-description {
-    font-size: 1.2rem;
+    font-size: 1rem;
     max-width: 600px;
-    margin: 0 auto 2rem;
+    margin: 0 auto 1rem;
 }
 
 /* ======================= PRODUCT SECTION ======================= */
@@ -239,6 +248,7 @@ body {
     /* For GSAP */
     opacity: 1;
     transform: translateY(50px);
+    
 }
 
 .product-card:hover {
@@ -253,7 +263,10 @@ body {
 }
 
 .product-info {
+    margin-top: -6rem;
     padding: 1.5rem;
+    background: #fff;
+    clip-path: polygon(100% 100%, 0% 100% , 0.00% 5.12%, 1.67% 4.79%, 3.33% 4.49%, 5.00% 4.22%, 6.67% 3.99%, 8.33% 3.79%, 10.00% 3.62%, 11.67% 3.50%, 13.33% 3.41%, 15.00% 3.35%, 16.67% 3.33%, 18.33% 3.35%, 20.00% 3.41%, 21.67% 3.50%, 23.33% 3.62%, 25.00% 3.79%, 26.67% 3.99%, 28.33% 4.22%, 30.00% 4.49%, 31.67% 4.79%, 33.33% 5.12%, 35.00% 5.48%, 36.67% 5.88%, 38.33% 6.30%, 40.00% 6.76%, 41.67% 7.24%, 43.33% 7.74%, 45.00% 8.28%, 46.67% 8.83%, 48.33% 9.40%, 50.00% 10.00%, 51.67% 10.61%, 53.33% 11.24%, 55.00% 11.89%, 56.67% 12.55%, 58.33% 13.22%, 60.00% 13.89%, 61.67% 14.58%, 63.33% 15.27%, 65.00% 15.97%, 66.67% 16.67%, 68.33% 17.36%, 70.00% 18.06%, 71.67% 18.75%, 73.33% 19.44%, 75.00% 20.12%, 76.67% 20.79%, 78.33% 21.44%, 80.00% 22.09%, 81.67% 22.72%, 83.33% 23.33%, 85.00% 23.93%, 86.67% 24.50%, 88.33% 25.06%, 90.00% 25.59%, 91.67% 26.09%, 93.33% 26.58%, 95.00% 27.03%, 96.67% 27.45%, 98.33% 27.85%, 100.00% 28.21%);
 }
 
 .product-title {
@@ -469,10 +482,18 @@ input, textarea, select {
 /* ======================= FOOTER ======================= */
 footer {
 text-align: center;
-    padding: 2rem;
+    padding: 3rem;
+    margin-top:-4rem;
     /* background: var(--text-color); */
     background: linear-gradient(45deg, #610a73e3, #e02984f0);
     color: var(--light-text-color);
+
+  --mask:
+    radial-gradient(57.2px at 50% 78.3px,#000 99%,#0000 101%) calc(50% - 58px) 0/116px 100%,
+    radial-gradient(57.2px at 50% -49.3px,#0000 99%,#000 101%) 50% 29px/116px 100% repeat-x;
+  -webkit-mask: var(--mask);
+          mask: var(--mask);
+
     /* margin-top: 4rem;*/
 }
 
@@ -511,10 +532,10 @@ text-align: center;
     height: 90vh;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     text-align: center;
     color: var(--light-text-color);
-    padding: 0 5%;
+    padding: 0;
     overflow: hidden;
 }
 
@@ -535,7 +556,7 @@ text-align: center;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Darker overlay for better text readability */
+    background-color: rgba(0, 0, 0, 0.2); /* Darker overlay for better text readability */
     z-index: 2;
 }
 
@@ -787,7 +808,7 @@ body { font-family: var(--font-primary); color: var(--text-color); background-co
 .btn-full-width { width: 100%; text-align: center; }
 
 /* ======================= SECTION & ANIMATION PREP ======================= */
-.section-title { text-align: center; font-family: var(--font-secondary); font-size: 2.8rem; margin-bottom: 4rem; color: var(--primary-color); opacity: 0; transform: translateY(30px); }
+.section-title { text-align: center; font-family: var(--font-secondary); font-size: 2.8rem; margin-bottom: 1rem; color: var(--primary-color); opacity: 0; transform: translateY(30px); }
 .nav-item, .nav-icons .icon-wrapper { opacity: 0; transform: translateY(-20px); }
 
 /* ======================= HEADER & NAVBAR ======================= */
@@ -837,20 +858,33 @@ body { font-family: var(--font-primary); color: var(--text-color); background-co
 #close-mobile-menu-btn { position: absolute; top: 10px; right: 10px; font-size: 2.5rem; background: none; border: none; color: var(--text-color); cursor: pointer; }
 
 /* ======================= HERO SECTION ======================= */
-.hero { position: relative; height: 90vh; display: flex; justify-content: center; align-items: center; text-align: center; color: var(--light-text-color); padding: 0 5%; overflow: hidden; }
+.hero { position: relative; height: 90vh; display: flex; justify-content: center;  text-align: center; color: var(--light-text-color); padding: 0; overflow: hidden; }
 .hero-video { position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; object-fit: cover; transform: translate(-50%, -50%); z-index: 1; }
 .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 2; }
-.hero-content { position: relative; z-index: 3; opacity: 0; transform: translateY(30px); }
-.hero-title { font-family: var(--font-secondary); font-size: 4rem; }
-.hero-subtitle { font-family: var(--font-secondary); font-size: 2.5rem; color: var(--secondary-color); margin-bottom: 1rem; }
+/* .hero-content { position: relative; z-index: 3; opacity: 0; transform: translateY(30px); } */
+.hero-title { font-family: var(--font-secondary); font-size: 1.8rem; }
+.hero-subtitle { font-family: var(--font-secondary); font-size: 1rem; color: var(--secondary-color); margin-bottom: 1rem; }
 
 /* ======================= ABOUT US SECTION ======================= */
 .about-section { padding: 4rem 5%;
     /* background-color: var(--secondary-color); */
     background: linear-gradient(45deg, #8a2be25c, #ff69b459);
+                /* background:#fbc1e0; */
     margin-top: 5;
-    margin: 8rem 0 0;
+    margin: 4rem 0 0;
+                
+                padding-top:14rem;
+                clip-path: polygon(100% 100%, 0% 100% , 0.00% 3.75%, 1.00% 3.61%, 2.00% 3.48%, 3.00% 3.36%, 4.00% 3.27%, 5.00% 3.19%, 6.00% 3.12%, 7.00% 3.07%, 8.00% 3.04%, 9.00% 3.03%, 10.00% 3.04%, 11.00% 3.06%, 12.00% 3.09%, 13.00% 3.15%, 14.00% 3.22%, 15.00% 3.31%, 16.00% 3.42%, 17.00% 3.54%, 18.00% 3.68%, 19.00% 3.83%, 20.00% 3.99%, 21.00% 4.17%, 22.00% 4.37%, 23.00% 4.58%, 24.00% 4.80%, 25.00% 5.03%, 26.00% 5.27%, 27.00% 5.52%, 28.00% 5.78%, 29.00% 6.05%, 30.00% 6.33%, 31.00% 6.61%, 32.00% 6.90%, 33.00% 7.20%, 34.00% 7.50%, 35.00% 7.80%, 36.00% 8.10%, 37.00% 8.41%, 38.00% 8.71%, 39.00% 9.01%, 40.00% 9.32%, 41.00% 9.61%, 42.00% 9.91%, 43.00% 10.20%, 44.00% 10.48%, 45.00% 10.76%, 46.00% 11.03%, 47.00% 11.29%, 48.00% 11.55%, 49.00% 11.79%, 50.00% 12.02%, 51.00% 12.24%, 52.00% 12.45%, 53.00% 12.65%, 54.00% 12.83%, 55.00% 13.00%, 56.00% 13.15%, 57.00% 13.29%, 58.00% 13.41%, 59.00% 13.52%, 60.00% 13.61%, 61.00% 13.68%, 62.00% 13.74%, 63.00% 13.78%, 64.00% 13.80%, 65.00% 13.80%, 66.00% 13.79%, 67.00% 13.76%, 68.00% 13.72%, 69.00% 13.65%, 70.00% 13.57%, 71.00% 13.48%, 72.00% 13.37%, 73.00% 13.24%, 74.00% 13.09%, 75.00% 12.94%, 76.00% 12.76%, 77.00% 12.58%, 78.00% 12.38%, 79.00% 12.16%, 80.00% 11.94%, 81.00% 11.70%, 82.00% 11.45%, 83.00% 11.20%, 84.00% 10.93%, 85.00% 10.66%, 86.00% 10.38%, 87.00% 10.09%, 88.00% 9.80%, 89.00% 9.50%, 90.00% 9.20%, 91.00% 8.90%, 92.00% 8.60%, 93.00% 8.29%, 94.00% 7.99%, 95.00% 7.69%, 96.00% 7.39%, 97.00% 7.09%, 98.00% 6.80%, 99.00% 6.51%, 100.00% 6.23%);
+                
  }
+/** Text Gradient Example */ 
+.text-gradient {
+ color: #BC13FE; 
+ background-image: linear-gradient(45deg, #BC13FE , #E025BE , #F0459A , #FB697A , #FF8E5F ); 
+ background-clip: text; 
+ -webkit-background-clip: text; 
+ -webkit-text-fill-color: transparent; 
+}
 .about-content { display: flex; align-items: center; gap: 4rem; max-width: 1200px; margin: 0 auto; }
 .about-image { flex: 1; border-radius: 15px; overflow: hidden; box-shadow: var(--shadow); }
 .about-image img { width: 100%; display: block; }
@@ -864,7 +898,7 @@ body { font-family: var(--font-primary); color: var(--text-color); background-co
 .product-card { background: transparent; border-radius: 15px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s ease, box-shadow 0.3s ease;   }
 .product-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
 .product-image { width: 100%; height: 350px; object-fit: cover; }
-.product-info { padding: 1.5rem; }
+.product-info { padding: 3.5rem; }
 .product-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; }
 .product-price { font-size: 1.3rem; font-weight: bold; color: var(--primary-color); margin-bottom: 1rem; }
 
@@ -906,7 +940,12 @@ body { font-family: var(--font-primary); color: var(--text-color); background-co
 }
 
 @media (max-width: 768px) {
-    .hero-title { font-size: 3rem; }
+    .hero-content{
+        padding:5rem 1rem 2rem;
+}
+    .hero-title { font-size: 2rem; }
+    .hero-subtitle { font-size: 1rem; }
+    .hero-description { font-size: .8rem; }
     .about-content { flex-direction: column; }
     .user-greeting {
     font-size: 70%;
@@ -1037,7 +1076,7 @@ body { font-family: var(--font-primary); color: var(--text-color); background-co
 .search-container {
     position: relative;
     max-width: 500px;
-    margin: 0 auto 4rem auto; /* Center it and add space below */
+    margin: 0 auto 1.2rem auto; /* Center it and add space below */
 }
 
 #search-bar {
@@ -1080,7 +1119,12 @@ body { font-family: var(--font-primary); color: var(--text-color); background-co
 }
 
 #apply-coupon-btn {
-    padding: 10px 15px; /* Make it smaller to fit */
+    /* padding: 10px 15px;  */
+        padding: 5px 0;
+    text-align: center;
+    width: -webkit-fill-available;
+    max-width: 30%;
+    /* Make it smaller to fit */
 }
 
 #coupon-status {
@@ -1095,3 +1139,5 @@ body { font-family: var(--font-primary); color: var(--text-color); background-co
 .sidebar-footer .subtotal.discount { color: var(--success-color); }
 .sidebar-footer .subtotal.total { font-size: 1.3rem; }
 
+
+/*  */
