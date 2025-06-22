@@ -483,7 +483,7 @@ const openProductModal = (productId) => {
     // }
     // --- NEW LOGIC ENDS HERE ---
         const clientWhatsAppNumber = '+923051120225'; // <-- IMPORTANT: REPLACE
-        let message = `*New Order from Elegenza Website!* 🎉  \n*Customer Details:*\n*Name:* ${name}\n*Phone:* ${phone}\n *Address:* ${locationInfo}\n\n\n*Order Items:*\n CN?`AffiliateCoupon:${CN}`:""`;
+        let message = `*New Order from Elegenza Website!* 🎉  \n*Customer Details:*\n*Name:* ${name}\n*Phone:* ${phone}\n *Address:* ${locationInfo}\n\n\n*Order Items:*\n ${CN?`AffiliateCoupon:${CN}`:""}`;
         let total = 0;
 
         cart.forEach(item => {
